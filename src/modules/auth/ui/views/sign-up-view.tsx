@@ -4,7 +4,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import Link from "next/link";
-import { FaGoogle, FaGithub } from 'react-icons/fa';
+import { FaGoogle, FaGithub } from "react-icons/fa";
 
 import { authClient } from "@/lib/auth-client";
 
@@ -38,7 +38,7 @@ const formSchema = z
   });
 
 export const SignUpView = () => {
-    const router = useRouter();
+  const router = useRouter();
 
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState<boolean>(false);
@@ -82,7 +82,7 @@ export const SignUpView = () => {
 
     authClient.signIn.social(
       {
-        provider: provider
+        provider: provider,
       },
       {
         onSuccess: () => {
@@ -237,9 +237,9 @@ export const SignUpView = () => {
             </form>
           </Form>
 
-          <div className="bg-radial from-green-700 to-green-900 relative hidden md:flex flex-col gap-y-4 items-center justify-center">
+          <div className="bg-radial from-sidebar-accent to-sidebar relative hidden md:flex flex-col gap-y-4 items-center justify-center">
             <img src={"/logo.svg"} alt="Image" className="h-[92px] w-[92px]" />
-            <p className="text-2xl font-semibold text-white">Meet.AI</p>
+            <p className="text-2xl font-semibold text-white">Aivo</p>
           </div>
         </CardContent>
       </Card>
@@ -250,3 +250,4 @@ export const SignUpView = () => {
     </div>
   );
 };
+
