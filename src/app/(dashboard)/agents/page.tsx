@@ -1,3 +1,5 @@
+import { auth } from "@/lib/auth";
+import AgentsListHeader from "@/modules/agents/ui/components/agent-list-headers";
 import {
   AgentsView,
   AgentsViewLoading,
@@ -5,16 +7,29 @@ import {
 import { getQueryClient, trpc } from "@/trpc/server";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { Suspense } from "react";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 
 const Page = async () => {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session) {
+    redirect("/sign-in");
+  }
+
   const querryClient = getQueryClient();
   void querryClient.prefetchQuery(trpc.agents.getMany.queryOptions());
   return (
-    <HydrationBoundary state={dehydrate(querryClient)}>
-      <Suspense fallback={<AgentsViewLoading />}>
-        <AgentsView />
-      </Suspense>
-    </HydrationBoundary>
+    <>
+      <AgentsListHeader />
+      <HydrationBoundary state={dehydrate(querryClient)}>
+        <Suspense fallback={<AgentsViewLoading />}>
+          <AgentsView />
+        </Suspense>
+      </HydrationBoundary>
+    </>
   );
 };
 
