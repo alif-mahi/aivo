@@ -135,4 +135,24 @@ export const meetingsRouter = createTRPCRouter({
       // TODO Create Stream Call, Upsert Stream Users
       return createdMeeting;
     }),
+
+  remove: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const [removedMeeting] = await db
+        .delete(meetings)
+        .where(
+          and(eq(meetings.id, input.id), eq(meetings.userId, ctx.auth.user.id)),
+        )
+        .returning();
+
+      if (!removedMeeting) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Meeting not found",
+        });
+      }
+
+      return removedMeeting;
+    }),
 });
